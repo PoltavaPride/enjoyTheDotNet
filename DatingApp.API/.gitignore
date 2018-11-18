@@ -1,6 +1,5 @@
 bin
 obj
-*.db
 
 # IDEs and editors
 /.idea
