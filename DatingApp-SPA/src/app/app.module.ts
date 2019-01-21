@@ -2,6 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { JwtModule } from '@auth0/angular-jwt';
+import { NgxGalleryModule } from 'ngx-gallery';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -10,10 +12,18 @@ import { HomeComponent } from './home/home.component';
 import { RegisterComponent } from './register/register.component';
 import { ErrorInterceptorProvider } from './_services/error.interceptor';
 
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { MemberListComponent } from './member-list/member-list.component';
+import { BsDropdownModule, TabsModule } from 'ngx-bootstrap';
+import { MemberListComponent } from './members/member-list/member-list.component';
 import { MessagesComponent } from './messages/messages.component';
 import { ListsComponent } from './lists/lists.component';
+import { MemberCardComponent } from './members/member-card/member-card.component';
+import { MemberDetailComponent } from './members/member-detail/member-detail.component';
+import { MemberDetailResover } from './_resolvers/member-detail.resolver';
+import { MemberListResover } from './_resolvers/member-list.resolver';
+
+export function tokenGetter() {
+	return localStorage.getItem('token');
+}
 
 @NgModule({
 	declarations: [
@@ -24,9 +34,26 @@ import { ListsComponent } from './lists/lists.component';
 		MemberListComponent,
 		MessagesComponent,
 		ListsComponent,
+		MemberCardComponent,
+		MemberDetailComponent,
 	],
-	imports: [BrowserModule, HttpClientModule, FormsModule, AppRoutingModule, BsDropdownModule.forRoot()],
-	providers: [ErrorInterceptorProvider],
+	imports: [
+		BrowserModule,
+		HttpClientModule,
+		FormsModule,
+		AppRoutingModule,
+		BsDropdownModule.forRoot(),
+		NgxGalleryModule,
+		TabsModule.forRoot(),
+		JwtModule.forRoot({
+			config: {
+				tokenGetter: tokenGetter,
+				whitelistedDomains: ['localhost:5000'],
+				blacklistedRoutes: ['localhost:5000/api/auth'],
+			},
+		}),
+	],
+	providers: [ErrorInterceptorProvider, MemberDetailResover, MemberListResover],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}
