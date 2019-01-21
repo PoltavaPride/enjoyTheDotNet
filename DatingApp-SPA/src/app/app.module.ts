@@ -18,8 +18,11 @@ import { MessagesComponent } from './messages/messages.component';
 import { ListsComponent } from './lists/lists.component';
 import { MemberCardComponent } from './members/member-card/member-card.component';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
-import { MemberDetailResover } from './_resolvers/member-detail.resolver';
-import { MemberListResover } from './_resolvers/member-list.resolver';
+import { MemberDetailResolver } from './_resolvers/member-detail.resolver';
+import { MemberListResolver } from './_resolvers/member-list.resolver';
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import { MemberEditResolver } from './_resolvers/member-edit.resolver';
+import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
 
 export function tokenGetter() {
 	return localStorage.getItem('token');
@@ -36,6 +39,7 @@ export function tokenGetter() {
 		ListsComponent,
 		MemberCardComponent,
 		MemberDetailComponent,
+		MemberEditComponent,
 	],
 	imports: [
 		BrowserModule,
@@ -53,7 +57,13 @@ export function tokenGetter() {
 			},
 		}),
 	],
-	providers: [ErrorInterceptorProvider, MemberDetailResover, MemberListResover],
+	providers: [
+		ErrorInterceptorProvider,
+		MemberDetailResolver,
+		MemberListResolver,
+		MemberEditResolver,
+		PreventUnsavedChanges,
+	],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}
